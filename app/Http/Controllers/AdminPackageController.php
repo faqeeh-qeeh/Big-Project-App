@@ -111,6 +111,8 @@ class AdminPackageController extends Controller
             'package' => $package // Mengirimkan variabel package bukan packages  
         ]);  
     }
+
+    
     public function edit(Package $package)  
     {  
         $agent = new \Jenssegers\Agent\Agent();

@@ -152,49 +152,86 @@ class StoreController extends Controller
         }  
     } 
 
-    public function products(Request $request)  
-    {  
-        $agent = new \Jenssegers\Agent\Agent();
-        $isMobile = $agent->isMobile();
-        $store = Store::first();
-        $slug = "products";
-        $packages = Package::with('products')->get();  
-        // Jika tidak ada data store, buat data baru dengan default 'is_open' = false
-        if (!$store) {
-            $store = Store::create(['name' => 'KANJENG MAMI', 'is_open' => false]);
-        }
-        // Mengambil semua produk (sesuaikan dengan kebutuhan Anda)  
-        $products = Product::all();  
-        $query = $request->input('search');
+    // public function products(Request $request)  
+    // {  
+    //     $agent = new \Jenssegers\Agent\Agent();
+    //     $isMobile = $agent->isMobile();
+    //     $store = Store::first();
+    //     $slug = "products";
+    //     $packages = Package::with('products')->get();  
+    //     // Jika tidak ada data store, buat data baru dengan default 'is_open' = false
+    //     if (!$store) {
+    //         $store = Store::create(['name' => 'KANJENG MAMI', 'is_open' => false]);
+    //     }
+    //     // Mengambil semua produk (sesuaikan dengan kebutuhan Anda)  
+    //     $products = Product::all();  
+    //     $query = $request->input('search');
         
 
-        if ($query) {
-            // Ambil semua produk tanpa pagination untuk menghitung total profit
-            $allProducts = Product::with('stock')
-                ->where('name', 'like', "%{$query}%")
-                ->orWhere('category_product', 'like', "%{$query}%")
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
-                ->get();
+    //     if ($query) {
+    //         // Ambil semua produk tanpa pagination untuk menghitung total profit
+    //         $allProducts = Product::with('stock')
+    //             ->where('name', 'like', "%{$query}%")
+    //             ->orWhere('category_product', 'like', "%{$query}%")
+    //             ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+    //             ->get();
         
-            // Terapkan pagination pada hasil pencarian
-            $products = Product::with('stock')
-                ->where('name', 'like', "%{$query}%")
-                ->orWhere('category_product', 'like', "%{$query}%")
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
-                ->paginate(100);
-        } else {
-            // Ambil semua produk tanpa pagination untuk menghitung total profit
-            $allProducts = Product::with('stock')
-                ->orderBy('name', 'asc')
-                ->get();
+    //         // Terapkan pagination pada hasil pencarian
+    //         $products = Product::with('stock')
+    //             ->where('name', 'like', "%{$query}%")
+    //             ->orWhere('category_product', 'like', "%{$query}%")
+    //             ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+    //             ->paginate(100);
+    //     } else {
+    //         // Ambil semua produk tanpa pagination untuk menghitung total profit
+    //         $allProducts = Product::with('stock')
+    //             ->orderBy('name', 'asc')
+    //             ->get();
         
-            // Terapkan pagination pada semua produk
-            $products = Product::with('stock')
-                ->orderBy('name', 'asc')
-                ->paginate(100);
-        }
-        return view('mitra.products', compact('products', 'store', 'slug', 'isMobile', 'packages'));  
-    }  
+    //         // Terapkan pagination pada semua produk
+    //         $products = Product::with('stock')
+    //             ->orderBy('name', 'asc')
+    //             ->paginate(100);
+    //     }
+    //     return view('mitra.products', compact('products', 'store', 'slug', 'isMobile', 'packages'));  
+    // }  
+
+    
+    public function products(Request $request)  
+{  
+    $agent = new \Jenssegers\Agent\Agent();  
+    $isMobile = $agent->isMobile();  
+    $store = Store::first();  
+    $packages = Package::with('products')->get();  
+    $slug = "products";
+
+    $query = $request->input('search');  
+    $showAll = $request->boolean('show_all');  
+
+    // Tentukan jumlah produk per halaman  
+    $perPage = $showAll ? 1000 : 12;  
+
+    $productsQuery = Product::with('stock')  
+        ->when($query, function($q) use ($query) {  
+            return $q->where('name', 'like', "%{$query}%")  
+                    ->orWhere('category_product', 'like', "%{$query}%");  
+        })  
+        ->orderBy('name', 'asc');  
+
+    $products = $productsQuery->paginate($perPage);  
+
+    // Tambahkan parameter show_all ke pagination  
+    $products->appends(['show_all' => $showAll, 'search' => $query]);  
+
+    return view('mitra.products', compact(  
+        'products',   
+        'store',   
+        'isMobile',   
+        'packages',   
+        'showAll',  
+        'slug'
+    ));  
+}
 
     public function detailProduct($id)  
     {  

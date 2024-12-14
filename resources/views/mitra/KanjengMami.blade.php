@@ -177,7 +177,7 @@
       </div>
     </div>
     <br><br> <br>
-
+    
 {{-- 
     <div class="container text-center animaqeeh profil">
       <div class="row">
@@ -201,7 +201,7 @@
       </div>
     </div> --}}
 
-
+    
     @extends('mitra.layouts.footer')
 
     <script

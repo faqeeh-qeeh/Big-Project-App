@@ -40,6 +40,29 @@
         background-color: #f8f9fa;  
         cursor: pointer;  
     } 
+    .aniva1, .aniva2, .aniva3, .aniva4, .aniva5, .aniva6, .aniva7, .aniva8 {  
+      animation: kiri-kanan ease-out forwards;  
+      animation-fill-mode: forwards; /* Pastikan animasi mempertahankan posisi akhir */  
+    }
+
+
+    .aniva1 { animation-duration: 0.4s; animation-delay: 0s; }  
+    .aniva2 { animation-duration: 0.5s; animation-delay: 0.1s; }  
+    .aniva3 { animation-duration: 0.6s; animation-delay: 0.2s; }  
+    .aniva4 { animation-duration: 0.7s; animation-delay: 0.3s; }  
+    .aniva5 { animation-duration: 0.8s; animation-delay: 0.4s; }  
+    .aniva6 { animation-duration: 0.9s; animation-delay: 0.5s; }  
+    .aniva7 { animation-duration: 1s; animation-delay: 0.6s; }  
+    .aniva8 { animation-duration: 1.1s; animation-delay: 0.7s; }  
+
+    @keyframes kiri-kanan {  
+      from {  
+        transform: translateX(-150%);  
+      }  
+      to {  
+        transform: translateX(0);  
+      }  
+    }
     </style>
   </head>
   <body>

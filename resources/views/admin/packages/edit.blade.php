@@ -204,10 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Tambah event listener untuk tombol hapus  
-        div.querySelector('.remove-product').addEventListener('click', function() {  
-            div.remove();  
+        $(document).on('click', '.remove-product', function() {  
+            console.log('Tombol hapus diklik');  
+            $(this).closest('.product-item').remove();  
             calculateTotalPrice();  
-        });  
+        });
 
         // Inisialisasi Select2 untuk dropdown baru  
                 // Inisialisasi Select2 untuk dropdown baru  

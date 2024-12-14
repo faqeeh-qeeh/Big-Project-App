@@ -17,11 +17,12 @@
     @if(session('success'))  
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050; {{ $isMobile ? 'width: 80%;' : '' }}">  
             <div class="toast bg-success text-white" role="alert">  
-                <div class="toast-header bg-success text-white">  
+                <div class="toast-header bg-dark text-white">  
+                    <img src="{{ asset('img/Logo KM.png') }}" class="rounded me-2" alt="..." style="width: 1.5rem;">  
                     <strong class="me-auto">Perubahan Produk</strong>  
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>  
                 </div>  
-                <div class="toast-body">  
+                <div class="toast-body" style="background-color: white; color: black;">  
                     {{ session('success') }}  
                 </div>  
             </div>  

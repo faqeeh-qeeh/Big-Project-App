@@ -51,12 +51,21 @@
               <td class="text-center">
                 <div class="btn-group" role="group">
                   <a
-                    href="{{ route('admin.packages.show', $package) }}"
-                    class="btn btn-sm btn-info me-1"
-                    title="Lihat Detail"
-                  >
-                    <i class="fas fa-eye"></i>
-                  </a>
+                  href="{{ route('admin.packages.show', $package) }}"
+                  class="btn btn-sm btn-info me-1"
+                  title="Lihat Detail"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+{{-- 
+                  <a  
+                      href="#"  
+                      class="btn btn-sm btn-info me-1 show-package"  
+                      data-id="{{ $package->id }}"  
+                      title="Lihat Detail"  
+                  >  
+                      <i class="fas fa-eye"></i>  
+                  </a> --}}
                   <a
                     href="{{ route('admin.packages.edit', $package) }}"
                     class="btn btn-sm btn-warning me-1"
@@ -159,6 +168,23 @@
   </div>
 </div>
 @endif {{-- JS Dependencies --}}
+{{-- 
+<!-- Show Package Modal -->  
+<div class="modal fade" id="showPackageModal" tabindex="-1" aria-labelledby="showPackageModalLabel" aria-hidden="true">  
+  <div class="modal-dialog modal-lg">  
+      <div class="modal-content">  
+          <div class="modal-header">  
+              <h5 class="modal-title" id="showPackageModalLabel">Detail Paket</h5>  
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  
+          </div>  
+          <div class="modal-body">  
+              <!-- Content will be loaded here via ajax -->  
+              <div id="packageDetails"></div>  
+          </div>  
+      </div>  
+  </div>  
+</div> --}}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -212,4 +238,22 @@
     });
   });
 </script>
+
+{{-- <script>  
+  $(document).ready(function () {  
+      $(".show-package").on("click", function () {  
+          const packageId = $(this).data("id");  
+          const url = `/admin/packages/${packageId}`;  
+  
+          // Make an AJAX GET request to fetch the package details  
+          $.get(url, function (data) {  
+              // Assuming the server returns the HTML for the package details  
+              $("#packageDetails").html(data);  
+              $("#showPackageModal").modal("show");  
+          }).fail(function () {  
+              alert("Terjadi kesalahan saat memuat detail paket.");  
+          });  
+      });  
+  });  
+  </script> --}}
 @include('admin.layouts.bot')

@@ -1,7 +1,13 @@
 @include('mitra.layouts.top')  
 @include('mitra.layouts.nav')  
 
-<div class="container">  
+<div class="container"> 
+    {{-- <div class="clearfix">
+        <img src="{{ asset('img/belajar_vector.jpeg') }}" class="col-md-4 float-md-end mb-3 ms-md-3" alt="Toko Fotocopy Kanjeng Mami"> 
+        <p> Selamat datang di Kanjeng Mami, solusi fotocopy terbaik di kota kami! Kami hadir untuk memenuhi segala kebutuhan cetak dan fotocopy Anda dengan kualitas prima dan harga terjangkau. </p> 
+        <p> Dilengkapi dengan mesin modern berkualitas tinggi, kami menjamin hasil cetakan yang jernih, bersih, dan sesuai dengan keinginan Anda. Baik untuk kebutuhan kantor, kampus, sekolah, atau keperluan pribadi, Kanjeng Mami siap melayani Anda dengan profesional. </p> 
+        <p> Ayo kunjungi kami! Dapatkan pelayanan cepat, ramah, dan hasil cetak terbaik hanya di Kanjeng Mami. Kami tidak sekadar mencetak, tapi memberikan solusi tepat untuk kebutuhan dokumen Anda. </p> 
+    </div>  --}}
     <h2 class="fw-bold" style="{{ $isMobile ? 'font-size: 4rem;' : '' }}">Daftar Paket Produk</h2>  
     <div class="row">  
         @foreach($packages as $package)  
@@ -113,15 +119,97 @@
               
         @empty  
             <div class="col-12">  
-                <div class="alert alert-info text-center">  
+                <div class="alert alert-info text-center" style="color: black;">  
                     Tidak ada produk yang tersedia.  
                 </div>  
             </div>  
         @endforelse 
-         
+        
+
+        <div class="container px-4 text-center">
+            <div class="row g-0 text-center">
+              <div class="col-sm-6 col-md-8">
+               <div class="p-3">
+
+                {{-- Tombol "Lihat Semua Produk" --}}  
+                @if(!$showAll && $products->total() > 12)  
+                <div class="text-center mt-3">  
+                    <a href="{{ route('mitra.products', [  
+                        'show_all' => true,   
+                        'search' => request('search')  
+                    ]) }}" class="btn btn-primary">  
+                        Lihat Semua Produk ({{ $products->total() }} Produk)  
+                    </a>  
+                </div>  
+                @endif  
+                {{-- Tombol Kembali ke Tampilan Terbatas --}}  
+                @if($showAll)  
+                    <div class="text-center mt-3">  
+                        <a href="{{ route('mitra.products', [  
+                            'show_all' => false,   
+                            'search' => request('search')  
+                        ]) }}" class="btn btn-secondary">  
+                            Tampilkan 12 Produk Pertama  
+                        </a>  
+                    </div>  
+                @endif 
+
+               </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="p-3">
+                    
+                <nav aria-label="Product navigation">  
+                    <ul class="pagination   
+                        {{ $isMobile ? 'pagination-lg' : '' }}   
+                        justify-content-center">  
+                        
+                        {{-- Previous Page Link --}}  
+                        @if ($products->onFirstPage())  
+                            <li class="page-item disabled">  
+                                <span class="page-link">Previous</span>  
+                            </li>  
+                        @else  
+                            <li class="page-item">  
+                                <a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a>  
+                            </li>  
+                        @endif  
+
+                        {{-- Pagination Elements --}}  
+                        @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)  
+                            @if ($page == $products->currentPage())  
+                                <li class="page-item active">  
+                                    <span class="page-link">{{ $page }}</span>  
+                                </li>  
+                            @else  
+                                <li class="page-item">  
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>  
+                                </li>  
+                            @endif  
+                        @endforeach  
+
+                        {{-- Next Page Link --}}  
+                        @if ($products->hasMorePages())  
+                            <li class="page-item">  
+                                <a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a>  
+                            </li>  
+                        @else  
+                            <li class="page-item disabled">  
+                                <span class="page-link">Next</span>  
+                            </li>  
+                        @endif  
+                    </ul>  
+                </nav>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
     </div>  
-
-
 
     
 </div>  

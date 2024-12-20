@@ -17,7 +17,7 @@ class ActuatorController extends Controller
             'status' => false,  
             'title' => $title,  
             'isMobile' => $isMobile  
-        ]); // Status default: Mati  
+        ]);
     }
     
     public function toggle(Request $request)

@@ -79,7 +79,7 @@ Route::middleware('auth:admin')->group(function () {
     [OrderController::class, 'updateStatus'])  
     ->name('order.update.status');
 
-    Route::get('/dashboard', [SensorDataController::class, 'index'])->name('dashboard');
+    Route::get('/admin/monitoring', [SensorDataController::class, 'index'])->name('admin.monitoring.index');
     Route::get('/api/sensor-data', [SensorDataController::class, 'getSensorData']);
     Route::get('/api/cost-data', [SensorDataController::class, 'getCostData']);
 

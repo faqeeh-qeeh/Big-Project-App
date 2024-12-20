@@ -11,15 +11,21 @@ class SensorDataController extends Controller
 {  
     public function index()  
     {  
-        return view('admin.energy.index');  
+        $agent = new \Jenssegers\Agent\Agent();
+        $isMobile = $agent->isMobile();
+        $title = "Monitoring Listrik";
+        // return view('admin.energy.index');  
+        return view('admin.energy.index', [  
+            'title' => $title,  
+            'isMobile' => $isMobile  
+        ]);
     }  
     public function getSensorData()  
     {  
-        // Pastikan Anda mengambil 10 data terakhir dengan benar  
         $sensorData = SensorData::latest('timestamp')  
             ->take(10)  
             ->get()  
-            ->reverse(); // Membalik urutan data agar yang terbaru di ujung  
+            ->reverse(); 
     
         $labels = [];  
         $voltage = [];  
@@ -39,7 +45,7 @@ class SensorDataController extends Controller
             $powerFactor[] = $data->power_factor;  
         }  
     
-        $latestData = $sensorData->last(); // Data paling akhir  
+        $latestData = $sensorData->last(); 
     
         return response()->json([  
             'chart' => [  

@@ -65,18 +65,18 @@
                         <span>Informasi Akun Client</span>
                     </a>
                 </li>
-                {{-- <li class="sidebar-item">
-                    <a href="{{ route('admin.monitoring.listrik') }}" class="sidebar-link">
+                <li class="sidebar-item">
+                    <a href="{{ route('admin.monitoring.index') }}" class="sidebar-link aniva6">
                         <i class="bi bi-clipboard2-pulse"></i>
                         <span>Monitoring</span>
                     </a>
-                </li> --}}
-                <li class="sidebar-item">
+                </li>
+                {{-- <li class="sidebar-item">
                     <a href="#" class="sidebar-link aniva6">
                         <i class="lni lni-cog"></i>
                         <span>Setting</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
             <div class="sidebar-footer">
                 <div class="sidebar-link lognav">

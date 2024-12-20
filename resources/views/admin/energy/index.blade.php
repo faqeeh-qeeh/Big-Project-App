@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+{{-- <!DOCTYPE html>  
 <html lang="en">  
 <head>  
     <meta charset="UTF-8">  
@@ -9,7 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
 </head>
-<body>
+<body> --}}
+@include('admin.layouts.top')  
+@section('title', $title) 
+    @include('admin.layouts.navbar') 
     <div class="container mt-5">
         <div class="text-center mb-4">
             <h1 class="display-4 text-primary"><i class="fas fa-bolt"></i> Pengeluaran Energi</h1>
@@ -133,6 +136,7 @@
             </div>
         </div>
     </div>
+</div>
     <script>  
         // Inisialisasi Chart.js  
         const voltageChart = new Chart(document.getElementById('voltageChart'), {  
@@ -369,6 +373,4 @@
                 day: 'numeric'   
             });  
     </script>
-
-</body>
-</html>
+@include('admin.layouts.bot')

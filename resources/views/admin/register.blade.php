@@ -8,8 +8,8 @@
 </head>  
 <body>  
 <div class="container mt-5">  
-    <h2>Admin Registration</h2>  
-    <form action="{{ url('admin/register') }}" method="POST">  
+    <h2>Admin Registration Telah ditutup</h2>  
+    {{-- <form action="{{ url('admin/register') }}" method="POST">  
         @csrf  
         <div class="mb-3">  
             <label for="name" class="form-label">Nama</label>  
@@ -28,7 +28,7 @@
             <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>  
         </div>  
         <button type="submit" class="btn btn-primary">Register</button>  
-    </form>  
+    </form>   --}}
 </div>  
 </body>  
 </html>

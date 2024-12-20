@@ -22,10 +22,25 @@
                             @endforeach  
                         </ul>  
                         <p>Harga Paket: Rp {{ number_format($package->total_price, 2) }}</p>  
-                        <form method="POST" action="{{ route('client.packages.addToCart', $package) }}">  
+                        @guest('client') 
+                        <form action="{{ route('client.login') }}" style="display: inline-block;">  
                             @csrf  
-                            <button class="btn btn-primary">Tambah ke Keranjang</button>  
-                        </form>  
+                            <button type="submit"  
+                                    class="btn btn-success btn-sm"  
+                                    style="{{ $isMobile ? 'font-size: 1.7rem;' : '' }}">  
+                                    <i class="bi bi-cart3"></i>
+                            </button>  
+                        </form> 
+                        @else
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" style="display: inline-block;">  
+                            @csrf  
+                            <button type="submit"  
+                                    class="btn btn-success btn-sm"  
+                                    style="{{ $isMobile ? 'font-size: 1.7rem;' : '' }}">  
+                                    <i class="bi bi-cart3"></i>
+                            </button>  
+                        </form> 
+                        @endguest  
                     </div>  
                 </div>  
             </div>  
@@ -224,7 +239,6 @@
 ></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Inisialisasi semua elemen dengan popover
         const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
         const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
             return new bootstrap.Popover(popoverTriggerEl);

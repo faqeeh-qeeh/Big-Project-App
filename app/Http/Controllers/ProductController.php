@@ -47,10 +47,9 @@ class ProductController extends Controller
 
         $product->save();  
 
-        // Simpan stok produk  
         $stock = new Stock();  
-        $stock->product_id = $product->id; // ID dari produk yang baru disimpan  
-        $stock->quantity = $request->input('quantity', 0); // Ambil total dari input atau default 0  
+        $stock->product_id = $product->id;
+        $stock->quantity = $request->input('quantity', 0);
         $stock->save();  
 
         return redirect()->route('admin.products.create')->with('success', 'Produk '. $product->name.' berhasil ditambahkan'); 
@@ -69,34 +68,29 @@ class ProductController extends Controller
         $query = $request->input('search');
 
         if ($query) {
-            // Ambil semua produk tanpa pagination untuk menghitung total profit
             $allProducts = Product::with('stock')
                 ->where('name', 'like', "%{$query}%")
                 ->orWhere('product_id', 'like', "%{$query}%")
                 ->orWhere('category_product', 'like', "%{$query}%")
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+                ->orderBy('name', 'asc')
                 ->get();
         
-            // Terapkan pagination pada hasil pencarian
             $products = Product::with('stock')
                 ->where('name', 'like', "%{$query}%")
                 ->orWhere('product_id', 'like', "%{$query}%")
                 ->orWhere('category_product', 'like', "%{$query}%")
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+                ->orderBy('name', 'asc') 
                 ->paginate(10);
         } else {
-            // Ambil semua produk tanpa pagination untuk menghitung total profit
             $allProducts = Product::with('stock')
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+                ->orderBy('name', 'asc') 
                 ->get();
         
-            // Terapkan pagination pada semua produk
             $products = Product::with('stock')
-                ->orderBy('name', 'asc') // Urutkan data berdasarkan abjad nama
+                ->orderBy('name', 'asc')
                 ->paginate(10);
         }
 
-        // Hitung total keuntungan dari semua produk
         $totalProfit = $allProducts->sum(function($product) {
             $quantity = optional($product->stock)->quantity ?? 0;
             return ($product->selling_price - $product->purchase_price) * $quantity;
@@ -125,8 +119,8 @@ class ProductController extends Controller
             'description' => 'required|string',  
             'image' => 'image|nullable',  
             'category_product' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:0',  // Validasi kuantitas stok  
-            'action' => 'required|string|in:add,subtract', // Menambahkan aksi untuk menambah/kurangi stok  
+            'quantity' => 'required|integer|min:0',  
+            'action' => 'required|string|in:add,subtract',
         ]);  
     
         $product = Product::findOrFail($id);  
@@ -157,7 +151,6 @@ class ProductController extends Controller
             $profitAmount = $request->quantity * ($product->selling_price - $product->purchase_price);  
             Profit::create(['product_id' => $product->id, 'amount' => $profitAmount]);  
         } elseif ($request->action === 'subtract') {  
-            // Mengurangi stok  
             if ($stock->quantity >= $request->quantity) {  
                 $stock->quantity -= $request->quantity;  
             } else {  
@@ -165,7 +158,7 @@ class ProductController extends Controller
             }  
         }  
     
-        $stock->save(); // Simpan perubahan stok  
+        $stock->save();
     
         return redirect()->route('admin.products.read')->with('success', 'Produk ' . $product->name . ' berhasil diperbarui');  
     }
@@ -173,7 +166,6 @@ class ProductController extends Controller
     public function destroy($id)  
     {  
         $product = Product::findOrFail($id);  
-        // Hapus gambar dari penyimpanan  
         if ($product->image) {  
             Storage::disk('public')->delete($product->image);  
         }  
@@ -186,7 +178,7 @@ class ProductController extends Controller
     {  
         $query = $request->input('query');  
         
-        $products = Product::with('stock') // Tambahkan relasi stock  
+        $products = Product::with('stock') 
             ->where(function($q) use ($query) {  
                 $q->where('name', 'LIKE', "%{$query}%")  
                   ->orWhere('product_id', 'LIKE', "%{$query}%")  

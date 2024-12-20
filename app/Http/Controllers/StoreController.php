@@ -16,28 +16,19 @@ use App\Models\Package;
 
 class StoreController extends Controller
 {
-    // Method untuk menampilkan halaman switch (tugas.blade.php)
     public function showTugas()  
     {   
         $agent = new Agent();  
         $isMobile = $agent->isMobile();  
-    
-        // Ambil atau buat store pertama  
         $store = Store::firstOrCreate(  
             ['name' => 'KANJENG MAMI'],   
             ['is_open' => false]  
-        );  
-    
-        // Ambil atau buat relay status  
+        );   
         $relayStatus = RelayStatus::firstOrCreate(  
-            [], // Tidak perlu kondisi spesifik  
+            [],
             ['is_on' => false]  
         );  
-    
-        // Judul halaman  
         $title = "Tugas Toko";  
-    
-        // Render view dengan data  
         return view('admin.products.tugas', [  
             'store' => $store,   
             'title' => $title,   
@@ -46,49 +37,32 @@ class StoreController extends Controller
         ]);
     }  
 
-    // Method untuk menampilkan halaman pengunjung (KanjengMami.blade.php)
     public function showKanjengMami()
     {
         $agent = new \Jenssegers\Agent\Agent();
         $isMobile = $agent->isMobile();
         $store = Store::first();
         $slug = "home";
-        // Jika tidak ada data store, buat data baru dengan default 'is_open' = false
         if (!$store) {
             $store = Store::create(['name' => 'KANJENG MAMI', 'is_open' => false]);
         }
-
-        // return view('layouts.KanjengMami', compact('store'));
         return view('mitra.KanjengMami', compact('store', 'slug', 'isMobile'));
     }
 
-
-    // Method untuk mengubah status buka/tutup
     public function toggleStatus(Request $request)  
     {  
-        // Validasi input  
         $request->validate([  
             'status' => 'required|boolean'  
         ]);  
 
         try {  
-            // Ambil store pertama  
             $store = Store::first();  
-
-            // Update status  
             $store->is_open = $request->input('status');  
             $store->save();  
-
-            // Log aktivitas (opsional)  
-            Log::info("Store status changed to: " . ($store->is_open ? 'Open' : 'Closed'));  
-
-            // Kirim notifikasi MQTT (opsional)  
+            Log::info("Store status changed to: " . ($store->is_open ? 'Open' : 'Closed'));   
             $mqttTopic = config('mqtt.store_status_topic');  
             $mqttMessage = $store->is_open ? 'OPEN' : 'CLOSED';  
-            
             MqttHelper::publishMessage($mqttTopic, $mqttMessage);  
-
-            // Respon JSON  
             return response()->json([  
                 'status' => $store->is_open ? 'buka' : 'tutup',  
                 'success' => true,  
@@ -96,9 +70,7 @@ class StoreController extends Controller
             ]);  
 
         } catch (\Exception $e) {  
-            // Tangani error  
             Log::error('Toggle Store Error: ' . $e->getMessage());  
-
             return response()->json([  
                 'status' => 'error',  
                 'success' => false,  
@@ -113,26 +85,14 @@ class StoreController extends Controller
         ]);  
     
         try {  
-            // Ambil atau buat relay status  
             $relayStatus = RelayStatus::first() ??   
                 RelayStatus::create(['is_on' => false]);  
-    
-            // Update status relay di database  
             $relayStatus->is_on = $request->input('status');  
-            $relayStatus->save();  
-    
-            // Topic MQTT untuk relay  
+            $relayStatus->save();   
             $topic = "polindra/matkuliot/relay/kel4TI2C";  
-            
-            // Kirim pesan MQTT  
             $message = $request->status ? "ON" : "OFF";  
-            
             $result = MqttHelper::publishMessage($topic, $message);  
-    
-            // Log aktivitas  
             Log::info("Relay status changed to: " . ($relayStatus->is_on ? 'ON' : 'OFF'));  
-    
-            // Respon JSON  
             return response()->json([  
                 'success' => $result,  
                 'status' => $relayStatus->is_on,  
@@ -198,53 +158,40 @@ class StoreController extends Controller
 
     
     public function products(Request $request)  
-{  
-    $agent = new \Jenssegers\Agent\Agent();  
-    $isMobile = $agent->isMobile();  
-    $store = Store::first();  
-    $packages = Package::with('products')->get();  
-    $slug = "products";
-
-    $query = $request->input('search');  
-    $showAll = $request->boolean('show_all');  
-
-    // Tentukan jumlah produk per halaman  
-    $perPage = $showAll ? 1000 : 12;  
-
-    $productsQuery = Product::with('stock')  
-        ->when($query, function($q) use ($query) {  
-            return $q->where('name', 'like', "%{$query}%")  
-                    ->orWhere('category_product', 'like', "%{$query}%");  
-        })  
-        ->orderBy('name', 'asc');  
-
-    $products = $productsQuery->paginate($perPage);  
-
-    // Tambahkan parameter show_all ke pagination  
-    $products->appends(['show_all' => $showAll, 'search' => $query]);  
-
-    return view('mitra.products', compact(  
-        'products',   
-        'store',   
-        'isMobile',   
-        'packages',   
-        'showAll',  
-        'slug'
-    ));  
-}
+    {  
+        $agent = new \Jenssegers\Agent\Agent();  
+        $isMobile = $agent->isMobile();  
+        $store = Store::first();  
+        $packages = Package::with('products')->get();  
+        $slug = "products";
+        $query = $request->input('search');  
+        $showAll = $request->boolean('show_all');  
+        $perPage = $showAll ? 1000 : 12;  
+        $productsQuery = Product::with('stock')  
+            ->when($query, function($q) use ($query) {  
+                return $q->where('name', 'like', "%{$query}%")  
+                        ->orWhere('category_product', 'like', "%{$query}%");  
+            })  
+            ->orderBy('name', 'asc');  
+        $products = $productsQuery->paginate($perPage);  
+        $products->appends(['show_all' => $showAll, 'search' => $query]);  
+        return view('mitra.products', compact(  
+            'products',   
+            'store',   
+            'isMobile',   
+            'packages',   
+            'showAll',  
+            'slug'
+        ));  
+    }
 
     public function detailProduct($id)  
     {  
         $agent = new \Jenssegers\Agent\Agent();  
         $isMobile = $agent->isMobile();  
         $store = Store::first();  
-        
-        // Mengambil produk berdasarkan ID  
-        $product = Product::findOrFail($id);  
-        
-        // Ambil produk yang memiliki kategori yang sama  
+        $product = Product::findOrFail($id);   
         $products = Product::where('category_product', $product->category_product)->where('id', '!=', $product->id)->get();  
-    
         return view('mitra.detailproduct', compact('product', 'isMobile', 'store', 'products'));  
     }
 }

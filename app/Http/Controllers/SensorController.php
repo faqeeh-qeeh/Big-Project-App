@@ -47,7 +47,6 @@
 //             ...$validatedData  
 //         ]);  
 
-//         // Broadcast data (opsional)  
 //         // broadcast(new NewSensorData($sensorData))->toOthers();  
 
 //         // return response()->json($sensorData, 201);  
@@ -56,7 +55,6 @@
     
 //     public function getMinuteCosts()  
 //     {  
-//         // Ambil total_energy_cost berdasarkan interval waktu untuk 60 menit terakhir  
 //         $minuteCosts = AggregatedData::where('interval_type', 'minute')  
 //             ->where('interval_start', '>=', now()->subHour())  
 //             ->orderBy('interval_start', 'desc')  
@@ -67,7 +65,6 @@
 
 //     public function getHourlyCosts()  
 //     {  
-//         // Ambil total energi cost per jam  
 //         $hourlyCosts = AggregatedData::where('interval_type', 'hour')  
 //             ->where('interval_start', '>=', now()->subDay())  
 //             ->orderBy('interval_start', 'desc')  
@@ -78,7 +75,6 @@
 
 //     public function getDailyCosts()  
 //     {  
-//         // Ambil total energi cost per hari  
 //         $dailyCosts = AggregatedData::where('interval_type', 'day')  
 //             ->where('interval_start', '>=', now()->subMonth())  
 //             ->orderBy('interval_start', 'desc')  
@@ -93,7 +89,6 @@
 //         $currentTime = Carbon::now();
 //         $threeSecondsAgo = $currentTime->subSeconds(3);
 
-//         // Ambil data sensor dalam 3 detik terakhir
 //         $sensorData = SensorData::where('timestamp', '>=', $threeSecondsAgo)->get();
 
 //         if ($sensorData->isEmpty()) {
@@ -104,10 +99,8 @@
 //         $energyInKWh = ($totalPower * (3 / 3600)) / 1000; // Energi dalam kWh
 //         $tariff = 1444.70; // Tarif dasar listrik PLN (contoh)
 
-//         // Hitung biaya
 //         $totalCost = $energyInKWh * $tariff;
 
-//         // Simpan hasil ke tabel agregasi
 //         AggregatedData::create([
 //             'interval_type' => 'minute', // Anda dapat mengubah ke 'hour' atau 'day'
 //             'interval_start' => $threeSecondsAgo,
